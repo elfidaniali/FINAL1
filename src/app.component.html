@@ -1,0 +1,94 @@
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+  <header class="bg-white dark:bg-gray-800 shadow-md">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.916 17.916 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+        </svg>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Domain Health Dashboard</h1>
+      </div>
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        <p>Note: Checks are simulated. App state is stored in your browser.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Add Domain Section -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Add a New Domain</h2>
+      <form (submit)="addDomain()" class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div class="w-full sm:flex-grow">
+          <label for="domain-url" class="sr-only">Domain URL</label>
+          <input
+            id="domain-url"
+            type="text"
+            [ngModel]="newDomainUrl()"
+            (ngModelChange)="newDomainUrl.set($event)"
+            name="newDomainUrl"
+            placeholder="e.g., example.com"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+          >
+        </div>
+        <button
+          type="submit"
+          class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          Add Domain
+        </button>
+      </form>
+      @if (errorMessage(); as msg) {
+        <p class="text-red-500 mt-3 text-sm">{{ msg }}</p>
+      }
+    </div>
+
+    <!-- Controls -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+        <div class="flex items-center gap-2">
+            <label for="auto-refresh" class="text-sm font-medium text-gray-700 dark:text-gray-300">Auto-refresh:</label>
+            <select id="auto-refresh" [ngModel]="autoRefreshInterval()" (ngModelChange)="autoRefreshInterval.set($event)" class="block w-full sm:w-auto pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                <option [value]="0">Off</option>
+                <option [value]="60">1 minute</option>
+                <option [value]="300">5 minutes</option>
+                <option [value]="900">15 minutes</option>
+            </select>
+        </div>
+        <div class="flex items-center gap-4">
+            <button 
+              (click)="exportToCsv()"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-500 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+            >
+             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Export CSV
+            </button>
+            <button 
+              (click)="checkAllDomains()" 
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+            >
+             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4 4l5 5M20 20l-5-5M4 20h5v-5M20 4h-5v5" />
+              </svg>
+              Check All Now
+            </button>
+        </div>
+    </div>
+
+    <!-- Domain List -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+      <app-domain-list
+        [domains]="domains()"
+        (checkDomain)="checkDomain($event)"
+        (removeDomain)="removeDomain($event)"
+        (getSuggestions)="getSuggestions($event)"
+        (toggleEdit)="toggleEditDomain($event)"
+        (saveDomain)="saveDomain($event)"
+        (toggleNotes)="toggleNotes($event)"
+      ></app-domain-list>
+    </div>
+  </main>
+</div>

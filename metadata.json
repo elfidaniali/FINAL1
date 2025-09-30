@@ -1,0 +1,5 @@
+{
+  "name": "Domain Health Dashboard",
+  "description": "An intelligent dashboard to monitor the health status of your domains. This tool provides at-a-glance status checks and leverages AI to offer troubleshooting suggestions for problematic domains.",
+  "requestFramePermissions": []
+}
